@@ -1,24 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React ,{useState} from 'react';
+import {Router,navigate} from "@reach/router";
+import 'bootstrap/dist/css/bootstrap.min.css';
+// import CatFacts from './components/CatFacts';
+import People from './components/People';
+
 
 function App() {
+  const [query,setQuery] = useState({
+    query:"error",
+    id:0
+  })
+
+  const handleInput = (e) => {
+    setQuery({
+      ...query,
+      [e.target.name]:e.target.value
+    })
+  } 
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    navigate(`/${query.query}/${query.id}`)
+      setQuery({
+        ...query,
+        [e.target.name]:e.target.value
+      })
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="">
+      <div className="d-flex mx-auto col-5 justify-content-between">
+        {/* <Link to="/cat-facts" >Cat Facts</Link> */}
+      </div>
+      <form className="form-inline" onSubmit={handleSubmit}>
+        <select name="query" onChange={handleInput}>
+          <option value="error">-- Select Query --</option>
+          <option value="people">People</option>
+          <option value="planets">Planets</option>
+        </select>
+        <input type="number" name="id" value={query.id} onChange={handleInput} />
+        <input type="submit" className="btn btn-info" value="Search"/>
+      </form>
+      
+      <Router>
+        {/* <CatFacts path="/cat-facts" /> */}
+        <People path="/:query/:id" />
+      </Router>
+      
     </div>
   );
 }
